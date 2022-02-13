@@ -8,9 +8,9 @@
 </template>
 
 <script>
+import axios from 'axios';
 import moment from "moment";
 import StoreList from '@/components/StoreList/StoreList';
-const stores = require('@/assets/stores/stores.json');
 
 export default {
   name: 'Stores',
@@ -20,7 +20,7 @@ export default {
   data () {
     return {
       currentTime: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
-      stores
+      stores: []
     }
   },
   computed: {
@@ -28,7 +28,16 @@ export default {
       return 'Welcome to our restaurants list! Your local time is: ' + this.currentTime;
     }
   },
+  methods: {
+    getStores() {
+      axios.get('/assets/stores/stores.json').then((response) => {
+        this.stores = response.data;
+      });
+    }
+  },
   mounted() {
+    this.getStores()
+
     const setTimer = () => setTimeout(() => {
       this.currentTime = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
       setTimer();
