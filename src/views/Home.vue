@@ -5,13 +5,14 @@
 </template>
 
 <script>
-import moment from 'moment';
+import TimerMixin from '@/mixins/TimerMixin.js';
 
 export default {
   name: 'Home',
+  mixins: [TimerMixin],
   data () {
     return {
-      currentTime: moment().format('dddd, MMMM Do YYYY, h:mm:ss a')
+      currentTime: new Date(Date.now())
     }
   },
   computed: {
@@ -20,11 +21,7 @@ export default {
     }
   },
   mounted() {
-    const setTimer = () => setTimeout(() => {
-      this.currentTime = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
-      setTimer();
-    }, 1000);
-    setTimer();
+    this.setTimer();
   }
 }
 </script>

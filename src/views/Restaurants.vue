@@ -8,18 +8,19 @@
 </template>
 
 <script>
-import axios from 'axios';
-import moment from "moment";
+import { getStores } from '@/api/store.api.js';
 import StoreList from '@/components/StoreList/StoreList';
+import TimerMixin from '@/mixins/TimerMixin.js';
 
 export default {
   name: 'Stores',
+  mixins: [TimerMixin],
   components: {
     StoreList
   },
   data () {
     return {
-      currentTime: moment().format('dddd, MMMM Do YYYY, h:mm:ss a'),
+      currentTime: new Date(Date.now()),
       stores: []
     }
   },
@@ -28,21 +29,12 @@ export default {
       return 'Welcome to our restaurants list! Your local time is: ' + this.currentTime;
     }
   },
-  methods: {
-    getStores() {
-      axios.get('/assets/stores/stores.json').then((response) => {
-        this.stores = response.data;
-      });
-    }
-  },
   mounted() {
-    this.getStores()
+    getStores().then((response) => {
+      this.stores = response.data;
+    });
 
-    const setTimer = () => setTimeout(() => {
-      this.currentTime = moment().format('dddd, MMMM Do YYYY, h:mm:ss a');
-      setTimer();
-    }, 1000);
-    setTimer();
+    this.setTimer();
   }
 }
 </script>
